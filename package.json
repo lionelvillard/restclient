@@ -1,36 +1,15 @@
 {
   "name": "rest-client",
-  "displayName": "REST Client",
-  "description": "REST Client for Visual Studio Code",
   "version": "0.15.3",
-  "publisher": "humao",
   "author": {
     "name": "Huachao Mao",
     "email": "huachaomao@gmail.com"
   },
-  "icon": "images/rest_icon.png",
-  "galleryBanner": {
-    "color": "#000000",
-    "theme": "dark"
-  },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Huachao/vscode-restclient/issues",
-    "email": "huachaomao@gmail.com"
-  },
-  "homepage": "https://github.com/Huachao/vscode-restclient/blob/master/README.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Huachao/vscode-restclient.git"
+    "url": "https://github.com/lionelvillard/vscode-restclient.git"
   },
-  "engines": {
-    "vscode": "^1.17.0"
-  },
-  "categories": [
-    "Other",
-    "Snippets",
-    "Languages"
-  ],
   "keywords": [
     "REST",
     "Http"
@@ -41,6 +20,7 @@
     "test": "mocha out/test",
     "tslint": "tslint --project tsconfig.json"
   },
+  "typings": "src/index.ts",
   "devDependencies": {
     "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.40",
