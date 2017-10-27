@@ -1,18 +1,8 @@
-# REST Client
+# REST Client for Node
 
-[![Join the chat at https://gitter.im/Huachao/vscode-restclient](https://badges.gitter.im/Huachao/vscode-restclient.svg)](https://gitter.im/Huachao/vscode-restclient?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Marketplace Version](https://vsmarketplacebadge.apphb.com/version/humao.rest-client.svg)](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) [![Installs](https://vsmarketplacebadge.apphb.com/installs/humao.rest-client.svg)](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) [![Rating](https://vsmarketplacebadge.apphb.com/rating/humao.rest-client.svg)](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) [![Dependency Status](https://david-dm.org/Huachao/vscode-restclient.svg)](https://david-dm.org/Huachao/vscode-restclient)
-
-REST Client allows you to send HTTP request and view the response in Visual Studio Code directly.
+REST Client for node allows you to send HTTP request following the standard [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html).
 
 ## Main Features
-* Send/Cancel/Rerun __HTTP request__ in editor and view response in a separate pane with syntax highlight
-* Send __CURL command__ in editor and copy HTTP request as `CURL command`
-* Auto save and view/clear request history
-* Support _MULTIPLE_ requests in the same file
-* View image response directly in pane
-* Save raw response and response body only to local disk
-* Customize font(size/family/weight) in response preview
-* Preview response with expected parts(_headers only_, _body only_, _full response_ and _both request and response_)
 * Authentication support for:
     - Basic Auth
     - Digest Auth
@@ -25,84 +15,15 @@ REST Client allows you to send HTTP request and view the response in Visual Stud
     - Provide system dynamic variables `{{$guid}}`, `{{$randomInt min max}}` and `{{$timestamp}}` 
     - Easily create/update/delete environments and custom variables in setting file
     - Support environment switch
-* Generate code snippets for __HTTP request__ in languages like `Python`, `Javascript` and more!
-* Remember Cookies for subsequent requests
 * Proxy support
 * Send SOAP requests, as well as snippet support to build SOAP envelope easily
-* `HTTP` language support
-    - `.http` and `.rest` file extensions support
-    - Syntax highlight (Request and Response)
-    - Auto completion for method, url, header, custom/global variables, mime types and so on
-    - Comments (line starts with `#` or `//`) support
-    - Support `json` and `xml` body indentation, comment shortcut and auto closing brackets
-    - Code snippets for operations like `GET` and `POST`
 
 ## Usage
-In editor, type a HTTP request as simple as below:
-```http
-https://example.com/comments/1
-```
-Or, you can follow the standard [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html) that including request method, headers and body.
-```http
-POST https://example.com/comments HTTP/1.1
-content-type: application/json
 
-{
-    "name": "sample",
-    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
-}
-```
-Once you prepared a request, click the `Send Request` link above the request, or use shortcut `Ctrl+Alt+R`(`Cmd+Alt+R` for macOS), or right click in the editor and then select `Send Request` in the menu, or press `F1` and then select/type `Rest Client: Send Request`, the response will be previewed in a separate __webview__ panel of Visual Studio Code. If you'd like to use the full power of searching, selecting or manipulating in Visual Studio Code, you can also preview response in __an untitled document__ by setting `rest-client.previewResponseInUntitledDocument` to `true`, by default the value is `false`. When a request is issued, ![cloud upload](images/loading.gif) will be displayed in the status bar, after receiving the response, the icon will be changed to the duration and response size.
-
-You can view the breakdown of the response time when hovering over the duration status bar, you could view the duration details of _Socket_, _DNS_, _TCP_, _First Byte_ and _Download_.
-
-When hovering over the response size status bar, you could view the breakdown response size details of _headers_ and _body_.
-
-> All the shortcuts in REST Client Extension are __ONLY__ available for file language mode `http` and `plaintext`.
-
-> __Send Request__ link above each request will only be visible when the request file is in `http` mode, more details can be found in [http language section](#http-language).
-
-### Select Request Text
-You may even want to save numerous requests in the same file and execute any of them as you wish easily. REST Client extension could recognize any line begins with three or more consecutive `#` as a delimiter between requests. Place the cursor anywhere between the delimiters, issuing the request as above, and it will first parse the text between the delimiters as request and then send it out.
-```http
-GET https://example.com/comments/1 HTTP/1.1
-
-###
-
-GET https://example.com/topics/1 HTTP/1.1
-
-###
-
-POST https://example.com/comments HTTP/1.1
-content-type: application/json
-
-{
-    "name": "sample",
-    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
-}
-```
-`REST Client Extension` also provides another flexibility that you can use mouse to highlight the text in file as request text.
-
-## Install
-Press `F1`, type `ext install` then search for `rest-client`.
-
-## Making Request
-![rest-client](images/usage.gif)
-### Request Line
-The first non-empty line of the selection (or document if nothing is selected) is the _Request Line_.
-Below are some examples of _Request Line_:
-```http
-GET https://example.com/comments/1 HTTP/1.1
-```
-```http
-GET https://example.com/comments/1
-```
-```http
-https://example.com/comments/1
-```
-If request method is omitted, request will be treated as __GET__, so above requests are the same after parsing.
+See `test` directory
 
 #### Query Strings
+
 You can always write query strings in the request line, like:
 ```http
 GET https://example.com/comments?page=2&pageSize=10
@@ -174,7 +95,6 @@ Content-Type: image/png
 > When your mouse is over the document link, you can `Ctrl+Click`(`Cmd+Click` for macOS) to open the file in a new tab.
 
 ## Making CURL Request
-![CURL Request](images/curl-request.png)
 We add the capability to directly run [curl request](https://curl.haxx.se/) in REST Client extension. The issuing request command is the same as raw HTTP one. REST Client will automatically parse the request with specified parser.
 
 `REST Client` doesn't fully support all the options of `cURL`, since underneath we use `request` library to send request which doesn't accept all the `cURL` options. Supported options are listed below:
@@ -185,32 +105,6 @@ We add the capability to directly run [curl request](https://curl.haxx.se/) in R
 * -u, --user(Basic auth support only)
 * -d, --data, --data-binary
 
-## Copy Request As cURL
-Sometimes you may want to get the curl format of a http request quickly and save it to clipboard, just pressing `F1` and then selecting/typing `Rest Client: Copy Request As cURL` or simply right click in the editor, and select `Copy Request As cURL`.
-
-## Cancel Request
-Once you want to cancel a processing request, use shortcut `Ctrl+Alt+K`(`Cmd+Alt+K` for macOS), or press `F1` and then select/type `Rest Client: Cancel Request`.
-
-## Rerun Last Request
-Sometimes you may want to refresh the API response, now you could do it simply using shortcut `Ctrl+Alt+L`(`Cmd+Alt+L` for macOS), or press `F1` and then select/type `Rest Client: Rerun Last Request` to rerun last request.
-
-## Request History
-![request-history](images/request-history.png)
-Each time we sent a http request, the request details(method, url, headers and body) would be persisted into file. By using shortcut `Ctrl+Alt+H`(`Cmd+Alt+H` for macOS), or press `F1` and then select/type `Rest Client: Request History`, you can view the last __50__ request items(method, url and request time) in the time reversing order, you can select any request you wish to trigger again. After specified request history item is selected, the request details would be displayed in a temp file, you can view the request details or follow previous step to trigger the request again.
-
-You can also clear request history by pressing `F1` and then selecting/typing `Rest Client: Clear Request History`.
-
-## Save Full Response
-![Save Response](images/response.gif)
-In the upper right corner of the response preview tab, we add a new icon to save the latest response to local file system. After you click the `Save Response` icon, it will prompt the window with the saved response file path. You can click the `Open` button to open the saved response file in current workspace, or click `Copy Path` to copy the saved response path to clipboard.
-
-## Save Response Body
-Another icon in the upper right corner of the response preview tab is the `Save Response Body` button, it will only save the response body __ONLY__ to local file system. The extension of saved file is set according to the response `MIME` type, like if the `Content-Type` value in response header is `application/json`, the saved file will have extension `.json`. You can also overwrite the `MIME` type and extension mapping according to your requirement with the `rest-client.mimeAndFileExtensionMapping` setting.
-```json
-"rest-client.mimeAndFileExtensionMapping": {
-    "application/atom+xml": "xml"
-}
-```
 
 ## Authentication
 We have supported some most common authentication schemes like _Basic Auth_, _Digest Auth_ and _SSL Client Certificates_.
@@ -239,79 +133,11 @@ Authorization: Digest user passwd
 ```
 
 ### SSL Client Certificates
-We support `PFX`, `PKCS12`, and `PEM` certificates. Before using your certificates, you need to set the certificates paths(absolute/relative to workspace/relative to current http file) in the setting file for expected host name(port is optional). For each host, you can specify the key `cert`, `key`, `pfx` and `passphrase`.
+We support `PFX`, `PKCS12`, and `PEM` certificates. Before using your certificates, you need to set the certificates paths(absolute/relative to current directory/relative to current http file) in the setting file for expected host name(port is optional). For each host, you can specify the key `cert`, `key`, `pfx` and `passphrase`.
 - `cert`: Path of public x509 certificate
 - `key`: Path of private key
 - `pfx`: Path of PKCS #12 or PFX certificate
 - `passphrase`: Optional passphrase for the certificate if required
-You can add following piece of code in your setting file if your certificate is in `PEM` format:
-```json
-"rest-client.certificates": {
-    "localhost:8081": {
-        "cert": "/Users/demo/Certificates/client.crt",
-        "key": "/Users/demo/Keys/client.key"
-    },
-    "example.com": {
-        "cert": "/Users/demo/Certificates/client.crt",
-        "key": "/Users/demo/Keys/client.key"
-    }
-}
-```
-Or if you have certificate in `PFX` or `PKCS12` format, setting code can be like this:
-```json
-"rest-client.certificates": {
-    "localhost:8081": {
-        "pfx": "/Users/demo/Certificates/clientcert.p12",
-        "passphrase": "123456"
-    }
-}
-```
-
-## Generate Code Snippet
-![Generate Code Snippet](images/code-snippet.gif)
-Once you’ve finalized your request in REST Client extension, you might want to make the same request from your own source code. We allow you to generate snippets of code in various languages and libraries that will help you achieve this. Once you prepared a request as previously, use shortcut `Ctrl+Alt+C`(`Cmd+Alt+C` for macOS), or right click in the editor and then select `Generate Code Snippet` in the menu, or press `F1` and then select/type `Rest Client: Generate Code Snippet`, it will pop up the language pick list, as well as library list. After you selected the code snippet language/library you want, the generated code snippet will be previewed in a separate panel of Visual Studio Code, you can click the `Copy Code Snippet` icon in the tab title to copy it to clipboard.
-
-## HTTP Language
-Add language support for HTTP request, with features like __syntax highlight__, __auto completion__, __code lens__ and __comment support__, when writing HTTP request in Visual Studio Code. By default, the language association will be automatically activated in two cases:
-
-1. File with extension `.http` or `.rest`
-2. First line of file follows standard request line in [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html), with `Method SP Request-URI SP HTTP-Version` format
-
-If you want to enable language association in other cases, just change the language mode in the right bottom of `Visual Studio Code` to `HTTP`.
-
-![HTTP Language](images/http.png)
-### Auto Completion
-Currently auto completion will be enabled for following seven categories:
-
-1. HTTP Method
-2. HTTP URL from request history
-3. HTTP Header
-4. Global dynamic variables
-5. Custom variables in current environment/file
-6. MIME Types for `Accept` and `Content-Type` headers
-7. Authentication scheme for `Basic` and `Digest`
-
-## Environments
-Environments give you the ability to customize requests using variables, and you can easily switch environment without changing requests in `http` file. A common usage is having different configurations for different product environments, like devbox, sandbox and production.
-
-Environments and corresponding variables of `REST Client Extension` are defined in setting file of `Visual Studio Code`, so you can create/update/delete environments and variables at any time you wish. The changes will take effect right away. If you __DO NOT__ want to use any environment, you can choose `No Environment` in the environments list. See [here](#variables) for more details about environment variables usage and other kinds of variables. Below is a sample piece of setting file for custom environments and environment level variables:
-```json
-"rest-client.environmentVariables": {
-    "local": {
-        "host": "localhost",
-        "token": "test token"
-    },
-    "production": {
-        "host": "example.com",
-        "token": "product token"
-    }
-}
-```
-A sample usage in `http` file for above custom variables is listed below:
-```http
-GET https://{{host}}/api/comments/1 HTTP/1.1
-Authorization: {{token}}
-```
 
 ## Variables
 We support two types of variables, one is __Global System Variables__ which is a predefined set of variables out-of-box, another is __Custom Variables__ which is defined by user and can even be divided into __Environment Variables__ and __File Variables__.
@@ -385,39 +211,18 @@ X-Request-Id: {{token}}
 }
 ```
 
-## Customize Response Preview
-REST Client Extension adds the ability to control the font family, size and weight used in the response preview.
-
-By default, REST Client Extension only previews the full response in preview panel(_status line_, _headers_ and _body_). You can control which part should be previewed via the `rest-client.previewOption` setting:
-
-Option | Description
------- | -----------
-full | Default. Full response is previewed
-headers | Only the response headers(including _status line_) are previewed
-body | Only the response body is previewed
-exchange | Preview the whole HTTP exchange(request and response)
-
 ## Settings
 * `rest-client.followredirect`: Follow HTTP 3xx responses as redirects. (Default is __true__)
 * `rest-client.defaultuseragent`: If User-Agent header is omitted in request header, this value will be added as user agent for each request. (Default is __vscode-restclient__)
 * `rest-client.timeoutinmilliseconds`: Timeout in milliseconds. 0 for infinity. (Default is __0__)
 * `rest-client.showResponseInDifferentTab`: Show response in different tab. (Default is __false__)
-* `rest-client.rememberCookiesForSubsequentRequests`: Save cookies from `Set-Cookie` header in response and use for subsequent requests. (Default is __true__)
 * `rest-client.enableTelemetry`: Send out anonymous usage data. (Default is __true__)
 * `rest-client.excludeHostsForProxy`: Excluded hosts when using proxy settings. (Default is __[]__)
-* `rest-client.fontSize`: Controls the font size in pixels used in the response preview. (Default is __13__)
-* `rest-client.fontFamily`: Controls the font family used in the response preview. (Default is __Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback"__)
-* `rest-client.fontWeight`: Controls the font weight used in the response preview. (Default is __normal__)
 * `rest-client.environmentVariables`: Sets the environments and custom variables belongs to it (e.g., `{"production": {"host": "api.example.com"}, "sandbox":{"host":"sandbox.api.example.com"}}`). (Default is __{}__)
 * `rest-client.mimeAndFileExtensionMapping`: Sets the custom mapping of mime type and file extension of saved response body. (Default is __{}__)
-* `rest-client.previewResponseInUntitledDocument`: Preview response in untitled document if set to true, otherwise displayed in html view. (Default is __false__)
-* `rest-client.previewResponseSetUntitledDocumentLanguageByContentType`: Attempt to automatically set document language based on Content-Type header when showing each response in new tab. (Default is __false__)
-* `rest-client.includeAdditionalInfoInResponse`: Include additional information such as request URL and response time when preview is set to use untitled document. (Default is __false__)
 * `rest-client.certificates`: Certificate paths for different hosts. The path can be absolute path or relative path(relative to workspace or current http file). (Default is __{}__)
 * `rest-client.useTrunkedTransferEncodingForSendingFileContent`: Use trunked transfer encoding for sending file content as request body. (Default is __true__)
 * `rest-client.suppressResponseBodyContentTypeValidationWarning`: Suppress response body content type validation. (Default is __false__)
-* `rest-client.previewOption`: Response preview output option. Option details is described above. (Default is __full__)
-[]()
 
 Rest Client respects the proxy settings made for Visual Studio Code (`http.proxy` and `http.proxyStrictSSL`).
 
@@ -427,8 +232,8 @@ Rest Client respects the proxy settings made for Visual Studio Code (`http.proxy
 ## Change Log
 See CHANGELOG [here](CHANGELOG.md)
 
-## Special Thanks
-All the amazing [contributors](https://github.com/Huachao/vscode-restclient/graphs/contributors)❤️
+## Special Thanks 
+to [Huachao Map](https://github.com/Huachao) and all the amazing [contributors](https://github.com/Huachao/vscode-restclient/graphs/contributors)❤️
 
 ## Feedback
-Please provide feedback through the [GitHub Issue](https://github.com/Huachao/vscode-restclient/issues) system, or fork the repository and submit PR.
+Please provide feedback through the [GitHub Issue](https://github.com/lionellvillard/vscode-restclient/issues) system, or fork the repository and submit PR.

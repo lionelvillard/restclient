@@ -3,7 +3,6 @@
 import { HttpRequest } from './models/httpRequest';
 import { IRequestParser } from './models/IRequestParser';
 import { RequestParserUtil } from './requestParserUtil';
-import { getWorkspaceRootPath } from './workspaceUtility';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -86,7 +85,7 @@ export class CurlRequestParser implements IRequestParser {
             return fs.existsSync(refPath) ? refPath : null;
         }
 
-        let rootPath = getWorkspaceRootPath();
+        let rootPath = process.cwd();
         let absolutePath;
         if (rootPath) {
             absolutePath = path.join(rootPath, refPath);

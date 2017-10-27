@@ -6,7 +6,6 @@ import { IRequestParser } from './models/IRequestParser';
 import { RequestParserUtil } from './requestParserUtil';
 import { HttpClient } from './httpClient';
 import { MimeUtility } from './mimeUtility';
-import { getWorkspaceRootPath } from './workspaceUtility';
 import { EOL } from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -190,7 +189,7 @@ export class HttpRequestParser implements IRequestParser {
         }
 
         let absolutePath;
-        let rootPath = getWorkspaceRootPath();
+        let rootPath = process.cwd();
         if (rootPath) {
             absolutePath = path.join(rootPath, refPath);
             if (fs.existsSync(absolutePath)) {

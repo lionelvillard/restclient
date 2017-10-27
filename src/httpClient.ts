@@ -1,29 +1,24 @@
 "use strict";
 
-import { window } from 'vscode';
 import { RestClientSettings } from './models/configurationSettings';
 import { HttpRequest } from './models/httpRequest';
 import { HttpResponse } from './models/httpResponse';
 import { HttpResponseTimingPhases } from './models/httpResponseTimingPhases';
 import { HostCertificate } from './models/hostCertificate';
-import { PersistUtility } from './persistUtility';
 import { MimeUtility } from './mimeUtility';
-import { getWorkspaceRootPath } from './workspaceUtility';
 import * as url from 'url';
 import * as fs from 'fs';
 import * as path from 'path';
 
 const encodeUrl = require('encodeurl');
 const request = require('request');
-const cookieStore = require('tough-cookie-file-store-bugfix');
 const iconv = require('iconv-lite');
 
 export class HttpClient {
     private _settings: RestClientSettings;
 
     public constructor(settings: RestClientSettings) {
-        this._settings = settings;
-        PersistUtility.createFileIfNotExists(PersistUtility.cookieFilePath);
+        this._settings = settings || new RestClientSettings();
     }
 
     public async send(httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -37,7 +32,7 @@ export class HttpClient {
             timeout: this._settings.timeoutInMilliseconds,
             gzip: true,
             followRedirect: this._settings.followRedirect,
-            jar: this._settings.rememberCookiesForSubsequentRequests ? request.jar(new cookieStore(PersistUtility.cookieFilePath)) : false,
+            jar: false,
             forever: true
         };
 
@@ -250,7 +245,7 @@ export class HttpClient {
     private static resolveCertificateFullPath(absoluteOrRelativePath: string, certName: string): string {
         if (path.isAbsolute(absoluteOrRelativePath)) {
             if (!fs.existsSync(absoluteOrRelativePath)) {
-                window.showWarningMessage(`Certificate path ${absoluteOrRelativePath} of ${certName} doesn't exist, please make sure it exists.`);
+                console.log(`Certificate path ${absoluteOrRelativePath} of ${certName} doesn't exist, please make sure it exists.`);
                 return;
             } else {
                 return absoluteOrRelativePath;
@@ -258,25 +253,25 @@ export class HttpClient {
         }
 
         // the path should be relative path
-        let rootPath = getWorkspaceRootPath();
+        let rootPath = process.cwd();
         let absolutePath = '';
         if (rootPath) {
             absolutePath = path.join(rootPath, absoluteOrRelativePath);
             if (fs.existsSync(absolutePath)) {
                 return absolutePath;
             } else {
-                window.showWarningMessage(`Certificate path ${absoluteOrRelativePath} of ${certName} doesn't exist, please make sure it exists.`);
+                console.log(`Certificate path ${absoluteOrRelativePath} of ${certName} doesn't exist, please make sure it exists.`);
                 return;
             }
         }
 
-        absolutePath = path.join(path.dirname(window.activeTextEditor.document.fileName), absoluteOrRelativePath);
-        if (fs.existsSync(absolutePath)) {
-            return absolutePath;
-        } else {
-            window.showWarningMessage(`Certificate path ${absoluteOrRelativePath} of ${certName} doesn't exist, please make sure it exists.`);
-            return;
-        }
+        // //absolutePath = path.join(path.dirname(window.activeTextEditor.document.fileName), absoluteOrRelativePath);
+        // if (fs.existsSync(absolutePath)) {
+        //     return absolutePath;
+        // } else {
+        //     window.showWarningMessage(`Certificate path ${absoluteOrRelativePath} of ${certName} doesn't exist, please make sure it exists.`);
+        //     return;
+        // }
     }
 
     private static capitalizeHeaderName(headers: { [key: string]: string }): { [key: string]: string } {
